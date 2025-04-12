@@ -322,7 +322,7 @@
   ]
 };
 
-    const months = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
+    const months = ["leden", "únor", "březen", "duben", "květen", "červen"];
     const start = new Date('2025-03-01');
     const end = new Date('2025-06-30');
     const today = new Date();
@@ -353,8 +353,8 @@
         calendar.appendChild(dayName);
       }
 
-      let firstDay = (monthStart.getDay() + 6) % 7;
-      for (let i = 0; i < firstDay; i++) {
+      let offset = (monthStart.getDay() + 6) % 7;
+      for (let i = 0; i < offset; i++) {
         const empty = document.createElement('div');
         empty.className = 'day';
         calendar.appendChild(empty);
