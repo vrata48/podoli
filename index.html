@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalendář – Mladší přípravka B</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background-color: #003366;
+      color: white;
+    }
+    header img {
+      max-height: 100px;
+    }
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background-color: #ccc;
+    }
+    .day {
+      background-color: white;
+      min-height: 100px;
+      padding: 5px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .day.today {
+      background-color: #fffacd !important;
+      border: 2px solid #ffcc00;
+    }
+    .week.current-week .day {
+      background-color: #f0f0f0;
+    }
+    .day-number {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .event {
+      font-size: 12px;
+      margin-bottom: 3px;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .training {
+      background-color: #c8e6c9;
+      color: #1b5e20;
+    }
+    .match {
+      background-color: #bbdefb;
+      color: #0d47a1;
+    }
+    .month-label {
+      grid-column: span 7;
+      text-align: center;
+      background-color: #003366;
+      color: white;
+      padding: 10px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .day-name {
+      background-color: #ddd;
+      padding: 5px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="AFK Slavoj Podolí Praha">
+    <h1>Kalendář jaro 2025 – Mladší přípravka B (U8)</h1>
+  </header>
+
+  <!-- ZDE BUDE GENEROVANÝ KALENDÁŘ DUBEN - ČERVEN -->
+  <!-- Každý měsíc = samostatný blok s názvem a týdny -->
+
+  <script>
+    // Nastavení a data
+    const events = {
+      '2025-04-02': [{ type: 'training', text: 'Trénink Podolí 15:30–17:00' }],
+      '2025-04-03': [{ type: 'training', text: 'Trénink Podolí 15:30–17:00' }],
+      '2025-04-05': [{ type: 'match', text: 'XAVEROV 14:00 (Podolí)' }],
+      // ... sem doplníš další události
+    };
+
+    const months = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
+
+    const start = new Date('2025-04-01');
+    const end = new Date('2025-06-30');
+    let current = new Date(start);
+    const today = new Date();
+
+    function getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      const dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+      return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
+    }
+
+    const todayWeek = getWeekNumber(today);
+
+    const container = document.createElement('div');
+
+    while (current <= end) {
+      const year = current.getFullYear();
+      const month = current.getMonth();
+      const monthName = months[month];
+      const monthStart = new Date(year, month, 1);
+      const monthEnd = new Date(year, month + 1, 0);
+
+      const monthDiv = document.createElement('div');
+      monthDiv.className = 'calendar';
+
+      const label = document.createElement('div');
+      label.className = 'month-label';
+      label.textContent = `${monthName.toUpperCase()} ${year}`;
+      monthDiv.appendChild(label);
+
+      const dayNames = ['Po','Út','St','Čt','Pá','So','Ne'];
+      dayNames.forEach(name => {
+        const dayName = document.createElement('div');
+        dayName.className = 'day-name';
+        dayName.textContent = name;
+        monthDiv.appendChild(dayName);
+      });
+
+      let firstDay = (monthStart.getDay() + 6) % 7;
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day';
+        monthDiv.appendChild(empty);
+      }
+
+      for (let d = 1; d <= monthEnd.getDate(); d++) {
+        const date = new Date(year, month, d);
+        const iso = date.toISOString().split('T')[0];
+        const week = getWeekNumber(date);
+
+        const day = document.createElement('div');
+        day.className = 'day';
+
+        if (iso === today.toISOString().split('T')[0]) {
+          day.classList.add('today');
+        }
+
+        const number = document.createElement('div');
+        number.className = 'day-number';
+        number.textContent = d;
+        day.appendChild(number);
+
+        if (events[iso]) {
+          events[iso].forEach(ev => {
+            const e = document.createElement('div');
+            e.className = `event ${ev.type}`;
+            e.textContent = ev.text;
+            day.appendChild(e);
+          });
+        }
+
+        monthDiv.appendChild(day);
+      }
+
+      container.appendChild(monthDiv);
+      current.setMonth(current.getMonth() + 1);
+      current.setDate(1);
+    }
+
+    document.body.appendChild(container);
+  </script>
+</body>
+</html>
