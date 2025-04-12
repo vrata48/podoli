@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kalendář – Mladší přípravka B</title>
   <style>
     body {
@@ -36,9 +36,6 @@
     .day.today {
       background-color: #fffacd !important;
       border: 2px solid #ffcc00;
-    }
-    .week.current-week .day {
-      background-color: #f0f0f0;
     }
     .day-number {
       font-weight: bold;
@@ -77,15 +74,11 @@
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="AFK Slavoj Podolí Praha">
+    <img src="logo.png" alt="AFK Slavoj Podolí Praha" />
     <h1>Kalendář jaro 2025 – Mladší přípravka B (U8)</h1>
   </header>
 
-  <!-- ZDE BUDE GENEROVANÝ KALENDÁŘ DUBEN - ČERVEN -->
-  <!-- Každý měsíc = samostatný blok s názvem a týdny -->
-
   <script>
-    // Nastavení a data
     const events = {
   "2025-03-22": [
     {
@@ -329,59 +322,47 @@
   ]
 };
 
-const months = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
-
-    const start = new Date('2025-04-01');
+    const months = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
+    const start = new Date('2025-03-01');
     const end = new Date('2025-06-30');
-    let current = new Date(start);
     const today = new Date();
-
-    function getWeekNumber(d) {
-      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-      const dayNum = d.getUTCDay() || 7;
-      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-      const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-      return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
-    }
-
-    const todayWeek = getWeekNumber(today);
 
     const container = document.createElement('div');
 
+    let current = new Date(start);
     while (current <= end) {
       const year = current.getFullYear();
       const month = current.getMonth();
-      const monthName = months[month];
       const monthStart = new Date(year, month, 1);
       const monthEnd = new Date(year, month + 1, 0);
+      const monthLabel = months[month] + ' ' + year;
 
-      const monthDiv = document.createElement('div');
-      monthDiv.className = 'calendar';
+      const calendar = document.createElement('div');
+      calendar.className = 'calendar';
 
       const label = document.createElement('div');
       label.className = 'month-label';
-      label.textContent = `${monthName.toUpperCase()} ${year}`;
-      monthDiv.appendChild(label);
+      label.textContent = monthLabel.toUpperCase();
+      calendar.appendChild(label);
 
       const dayNames = ['Po','Út','St','Čt','Pá','So','Ne'];
-      dayNames.forEach(name => {
+      for (let d = 0; d < 7; d++) {
         const dayName = document.createElement('div');
         dayName.className = 'day-name';
-        dayName.textContent = name;
-        monthDiv.appendChild(dayName);
-      });
+        dayName.textContent = dayNames[d];
+        calendar.appendChild(dayName);
+      }
 
       let firstDay = (monthStart.getDay() + 6) % 7;
       for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement('div');
         empty.className = 'day';
-        monthDiv.appendChild(empty);
+        calendar.appendChild(empty);
       }
 
       for (let d = 1; d <= monthEnd.getDate(); d++) {
         const date = new Date(year, month, d);
         const iso = date.toISOString().split('T')[0];
-        const week = getWeekNumber(date);
 
         const day = document.createElement('div');
         day.className = 'day';
@@ -396,18 +377,18 @@ const months = ["leden", "únor", "březen", "duben", "květen", "červen", "če
         day.appendChild(number);
 
         if (events[iso]) {
-          events[iso].forEach(ev => {
+          events[iso].forEach(function(ev) {
             const e = document.createElement('div');
-            e.className = `event ${ev.type}`;
+            e.className = 'event ' + ev.type;
             e.textContent = ev.text;
             day.appendChild(e);
           });
         }
 
-        monthDiv.appendChild(day);
+        calendar.appendChild(day);
       }
 
-      container.appendChild(monthDiv);
+      container.appendChild(calendar);
       current.setMonth(current.getMonth() + 1);
       current.setDate(1);
     }
