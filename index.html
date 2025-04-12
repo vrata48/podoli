@@ -1,399 +1,189 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kalendář – Mladší přípravka B</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalendář jaro 2025 – Mladší přípravka B – (U8)</title>
   <style>
     body {
       font-family: sans-serif;
-      background-color: #f9f9f9;
       margin: 0;
-      padding: 0;
+      background: #f5f5f5;
     }
     header {
-      text-align: center;
-      padding: 20px;
-      background-color: #003366;
+      background-color: #0074D9;
       color: white;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     header img {
-      max-height: 100px;
+      height: 50px;
     }
-    .calendar {
+    h1 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+    .calendar-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding: 1rem;
+    }
+    .month {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .month h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+    .weekdays, .days {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 1px;
-      background-color: #ccc;
+      text-align: center;
     }
-    .day {
-      background-color: white;
-      min-height: 100px;
-      padding: 5px;
-      box-sizing: border-box;
-      position: relative;
-    }
-    .day.today {
-      background-color: #fffacd !important;
-      border: 2px solid #ffcc00;
-    }
-    .day-number {
+    .weekdays div {
       font-weight: bold;
-      margin-bottom: 5px;
+      padding-bottom: .5rem;
     }
-    .event {
-      font-size: 12px;
-      margin-bottom: 3px;
-      padding: 2px 4px;
-      border-radius: 4px;
+    .days div {
+      padding: .5rem;
+      min-height: 60px;
+      border: 1px solid #eee;
+      position: relative;
+      white-space: pre-line;
+    }
+    .today {
+      background: orange;
+      color: white;
     }
     .training {
-      background-color: #c8e6c9;
-      color: #1b5e20;
+      background: #2ECC40;
+      color: white;
     }
     .match {
-      background-color: #bbdefb;
-      color: #0d47a1;
-    }
-    .month-label {
-      grid-column: span 7;
-      text-align: center;
-      background-color: #003366;
+      background: #0074D9;
       color: white;
-      padding: 10px 0;
-      font-size: 18px;
-      font-weight: bold;
     }
-    .day-name {
-      background-color: #ddd;
-      padding: 5px;
-      text-align: center;
-      font-weight: bold;
+    @media (max-width: 768px) {
+      .weekdays, .days {
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="AFK Slavoj Podolí Praha" />
-    <h1>Kalendář jaro 2025 – Mladší přípravka B (U8)</h1>
+    <h1>Kalendář jaro 2025 – Mladší přípravka B – (U8)</h1>
+    <img src="logo.png" alt="AFK Slavoj Podolí logo">
   </header>
 
+  <div class="calendar-container" id="calendar">
+    <!-- Kalendáře měsíců zde budou vloženy dynamicky -->
+  </div>
+
   <script>
-    const events = {
-  "2025-03-22": [
-    {
-      "type": "match",
-      "text": "ČAFC 14:00 (Podolí)"
-    }
-  ],
-  "2025-04-05": [
-    {
-      "type": "match",
-      "text": "XAVEROV 14:00 (Podolí)"
-    }
-  ],
-  "2025-04-12": [
-    {
-      "type": "match",
-      "text": "PRAGA 11:00 (venku)"
-    }
-  ],
-  "2025-04-19": [
-    {
-      "type": "match",
-      "text": "SLAVIA 11:00 (Podolí)"
-    }
-  ],
-  "2025-04-27": [
-    {
-      "type": "match",
-      "text": "Aritma 10:00 (venku, NE!)"
-    }
-  ],
-  "2025-05-04": [
-    {
-      "type": "match",
-      "text": "BRANÍK 10:00 (Podolí)"
-    }
-  ],
-  "2025-05-11": [
-    {
-      "type": "match",
-      "text": "Tempo 10:00 (venku)"
-    }
-  ],
-  "2025-05-17": [
-    {
-      "type": "match",
-      "text": "Dukla JM 10:00 (Podolí)"
-    }
-  ],
-  "2025-05-25": [
-    {
-      "type": "match",
-      "text": "Háje 10:00 (venku, NE!)"
-    }
-  ],
-  "2025-06-01": [
-    {
-      "type": "match",
-      "text": "Zbraslav 10:00 (venku)"
-    }
-  ],
-  "2025-06-08": [
-    {
-      "type": "match",
-      "text": "Motorlet 10:00 (venku)"
-    }
-  ],
-  "2025-06-14": [
-    {
-      "type": "match",
-      "text": "ADMIRA 9:00 (Podolí)"
-    }
-  ],
-  "2025-03-25": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-03-27": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-04-01": [
-    {
-      "type": "training",
-      "text": "Trénink ZŠ Bítovská 17:00–19:00"
-    }
-  ],
-  "2025-04-03": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-04-08": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-04-10": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-04-15": [
-    {
-      "type": "training",
-      "text": "Trénink ZŠ Bítovská 17:00–19:00"
-    }
-  ],
-  "2025-04-17": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-04-22": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-04-24": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-04-29": [
-    {
-      "type": "training",
-      "text": "Trénink ZŠ Bítovská 17:00–19:00"
-    }
-  ],
-  "2025-05-01": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-05-06": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-05-08": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-05-13": [
-    {
-      "type": "training",
-      "text": "Trénink ZŠ Bítovská 17:00–19:00"
-    }
-  ],
-  "2025-05-15": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-05-20": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-05-22": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-05-27": [
-    {
-      "type": "training",
-      "text": "Trénink ZŠ Bítovská 17:00–19:00"
-    }
-  ],
-  "2025-05-29": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-06-03": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-06-05": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-06-10": [
-    {
-      "type": "training",
-      "text": "Trénink ZŠ Bítovská 17:00–19:00"
-    }
-  ],
-  "2025-06-12": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-06-17": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-06-19": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ],
-  "2025-06-24": [
-    {
-      "type": "training",
-      "text": "Trénink ZŠ Bítovská 17:00–19:00"
-    }
-  ],
-  "2025-06-26": [
-    {
-      "type": "training",
-      "text": "Trénink Podolí 15:30–17:00"
-    }
-  ]
-};
+    const OFF_DAYS = ["2025-04-17", "2025-05-01", "2025-05-08"];
+    const MATCHES = {
+      "2025-03-29": { text: "V.ŽIŽKOV 10:45 (venku)" },
+      "2025-04-05": { text: "XAVEROV 14:00 (doma)" },
+      "2025-04-13": { text: "ADMIRA 15:00 (venku)" },
+      "2025-04-27": { text: "STŘEŠOVICE 09:00 (venku)" },
+      "2025-05-04": { text: "HÁJE 10:30 (doma)" },
+      "2025-05-11": { text: "DUKLA JM 11:15 (venku)" },
+      "2025-05-14": { text: "HÁJE 17:30 (venku)" },
+      "2025-05-18": { text: "V.ŽIŽKOV 12:30 (doma)" },
+      "2025-05-25": { text: "XAVEROV 09:00 (venku)" },
+      "2025-05-28": { text: "DUKLA JM 17:00 (doma)" },
+      "2025-06-01": { text: "ADMIRA 10:00 (doma)" },
+      "2025-06-07": { text: "ČAFC 08:30 (venku)" },
+      "2025-06-14": { text: "STŘEŠOVICE 12:00 (doma)" },
+    };
 
-    const months = ["leden", "únor", "březen", "duben", "květen", "červen"];
-    const start = new Date('2025-03-01');
-    const end = new Date('2025-06-30');
-    const today = new Date();
+    function isEvenWeek(date) {
+      const start = new Date(date.getFullYear(), 0, 1);
+      const day = Math.floor((date - start) / (24 * 60 * 60 * 1000));
+      return Math.floor(day / 7) % 2 === 0;
+    }
 
-    const container = document.createElement('div');
+    function formatDate(date) {
+      const local = new Date(date);
+      local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+      return local.toISOString().split("T")[0];
+    }
 
-    let current = new Date(start);
-    while (current <= end) {
-      const year = current.getFullYear();
-      const month = current.getMonth();
-      const monthStart = new Date(year, month, 1);
-      const monthEnd = new Date(year, month + 1, 0);
-      const monthLabel = months[month] + ' ' + year;
+    function generateCalendar(month, year) {
+      const container = document.createElement("div");
+      container.className = "month";
 
-      const calendar = document.createElement('div');
-      calendar.className = 'calendar';
+      const title = document.createElement("h2");
+      title.textContent = new Date(year, month).toLocaleDateString("cs-CZ", { month: "long", year: "numeric" });
+      container.appendChild(title);
 
-      const label = document.createElement('div');
-      label.className = 'month-label';
-      label.textContent = monthLabel.toUpperCase();
-      calendar.appendChild(label);
+      const weekdays = document.createElement("div");
+      weekdays.className = "weekdays";
+      ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"].forEach(d => {
+        const el = document.createElement("div");
+        el.textContent = d;
+        weekdays.appendChild(el);
+      });
+      container.appendChild(weekdays);
 
-      const dayNames = ['Po','Út','St','Čt','Pá','So','Ne'];
-      for (let d = 0; d < 7; d++) {
-        const dayName = document.createElement('div');
-        dayName.className = 'day-name';
-        dayName.textContent = dayNames[d];
-        calendar.appendChild(dayName);
+      const days = document.createElement("div");
+      days.className = "days";
+
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      let start = (firstDay.getDay() + 6) % 7;
+
+      for (let i = 0; i < start; i++) {
+        const empty = document.createElement("div");
+        days.appendChild(empty);
       }
 
-      let offset = (new Date(year, month, 1).getDay() + 6) % 7;
-      for (let i = 0; i < offset; i++) {
-        const empty = document.createElement('div');
-        empty.className = 'day';
-        calendar.appendChild(empty);
-      }
+      const todayStr = formatDate(new Date());
 
-      for (let d = 1; d <= monthEnd.getDate(); d++) {
+      for (let d = 1; d <= lastDay.getDate(); d++) {
         const date = new Date(year, month, d);
-        const iso = date.toISOString().split('T')[0];
+        const dateStr = formatDate(date);
+        const cell = document.createElement("div");
+        cell.textContent = d;
 
-        const day = document.createElement('div');
-        day.className = 'day';
-
-        if (iso === today.toISOString().split('T')[0]) {
-          day.classList.add('today');
+        if (dateStr === todayStr) cell.classList.add("today");
+        if (MATCHES[dateStr]) {
+          cell.classList.add("match");
+          cell.title = MATCHES[dateStr].text;
+          cell.textContent += "\n" + MATCHES[dateStr].text;
+        } else if (!OFF_DAYS.includes(dateStr)) {
+          const weekday = date.getDay();
+          if ((weekday === 2 || weekday === 4)) {
+            if (weekday === 2 && isEvenWeek(date)) {
+              cell.classList.add("training");
+              cell.textContent += "\n15:30-17:00 PODOLÍ";
+            } else if (weekday === 2 && !isEvenWeek(date)) {
+              cell.classList.add("training");
+              cell.textContent += "\n17:00-19:00 BÍTOVSKÁ";
+            } else if (weekday === 4) {
+              cell.classList.add("training");
+              cell.textContent += "\n15:30-17:00 PODOLÍ";
+            }
+          }
         }
 
-        const number = document.createElement('div');
-        number.className = 'day-number';
-        number.textContent = d;
-        day.appendChild(number);
-
-        if (events[iso]) {
-          events[iso].forEach(function(ev) {
-            const e = document.createElement('div');
-            e.className = 'event ' + ev.type;
-            e.textContent = ev.text;
-            day.appendChild(e);
-          });
-        }
-
-        calendar.appendChild(day);
+        days.appendChild(cell);
       }
 
-      container.appendChild(calendar);
-      current.setMonth(current.getMonth() + 1);
-      current.setDate(1);
+      container.appendChild(days);
+      document.getElementById("calendar").appendChild(container);
     }
 
-    document.body.appendChild(container);
+    for (let m = 2; m <= 5; m++) {
+      generateCalendar(m, 2025);
+    }
   </script>
 </body>
 </html>
