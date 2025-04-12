@@ -353,7 +353,7 @@
         calendar.appendChild(dayName);
       }
 
-      let offset = (monthStart.getDay() === 0) ? 6 : monthStart.getDay() - 1;
+      let offset = (new Date(year, month, 1).getDay() + 6) % 7;
       for (let i = 0; i < offset; i++) {
         const empty = document.createElement('div');
         empty.className = 'day';
