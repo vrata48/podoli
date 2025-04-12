@@ -15,11 +15,13 @@
       color: white;
       padding: 1rem;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      text-align: center;
     }
     header img {
       height: 50px;
+      margin-top: 0.5rem;
     }
     h1 {
       margin: 0;
@@ -40,10 +42,11 @@
     .month h2 {
       text-align: center;
       margin-top: 0;
+      font-size: 1.2rem;
     }
     .weekdays, .days {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(7, minmax(40px, 1fr));
       text-align: center;
     }
     .weekdays div {
@@ -51,11 +54,12 @@
       padding-bottom: .5rem;
     }
     .days div {
-      padding: .5rem;
+      padding: .3rem;
       min-height: 60px;
       border: 1px solid #eee;
       position: relative;
       white-space: pre-line;
+      font-size: 0.75rem;
     }
     .today {
       background: orange;
@@ -69,9 +73,17 @@
       background: #0074D9;
       color: white;
     }
-    @media (max-width: 768px) {
-      .weekdays, .days {
-        font-size: 0.8rem;
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1rem;
+      }
+      .days div {
+        min-height: 50px;
+        font-size: 0.65rem;
+        padding: .2rem;
+      }
+      .weekdays {
+        font-size: 0.7rem;
       }
     }
   </style>
@@ -163,13 +175,13 @@
           if ((weekday === 2 || weekday === 4)) {
             if (weekday === 2 && isEvenWeek(date)) {
               cell.classList.add("training");
-              cell.textContent += "\n15:30-17:00 PODOLÍ";
+              cell.textContent += "\n15:30 PODOLÍ";
             } else if (weekday === 2 && !isEvenWeek(date)) {
               cell.classList.add("training");
-              cell.textContent += "\n17:00-19:00 BÍTOVSKÁ";
+              cell.textContent += "\n17:00 BÍTOVSKÁ";
             } else if (weekday === 4) {
               cell.classList.add("training");
-              cell.textContent += "\n15:30-17:00 PODOLÍ";
+              cell.textContent += "\n15:30 PODOLÍ";
             }
           }
         }
