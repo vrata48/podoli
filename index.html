@@ -61,6 +61,10 @@
       white-space: pre-line;
       font-size: 0.75rem;
     }
+    .days div b {
+      display: block;
+      margin-bottom: 0.2rem;
+    }
     .today {
       background: orange;
       color: white;
@@ -101,19 +105,19 @@
   <script>
     const OFF_DAYS = ["2025-04-17", "2025-05-01", "2025-05-08"];
     const MATCHES = {
-      "2025-03-29": { text: "V.ŽIŽKOV 10:45 (venku)" },
-      "2025-04-05": { text: "XAVEROV 14:00 (doma)" },
-      "2025-04-13": { text: "ADMIRA 15:00 (venku)" },
-      "2025-04-27": { text: "STŘEŠOVICE 09:00 (venku)" },
-      "2025-05-04": { text: "HÁJE 10:30 (doma)" },
-      "2025-05-11": { text: "DUKLA JM 11:15 (venku)" },
-      "2025-05-14": { text: "HÁJE 17:30 (venku)" },
-      "2025-05-18": { text: "V.ŽIŽKOV 12:30 (doma)" },
-      "2025-05-25": { text: "XAVEROV 09:00 (venku)" },
-      "2025-05-28": { text: "DUKLA JM 17:00 (doma)" },
-      "2025-06-01": { text: "ADMIRA 10:00 (doma)" },
-      "2025-06-07": { text: "ČAFC 08:30 (venku)" },
-      "2025-06-14": { text: "STŘEŠOVICE 12:00 (doma)" },
+      "2025-03-29": { text: "10:45 V.ŽIŽKOV (venku)" },
+      "2025-04-05": { text: "14:00 XAVEROV (doma)" },
+      "2025-04-13": { text: "15:00 ADMIRA (venku)" },
+      "2025-04-27": { text: "09:00 STŘEŠOVICE (venku)" },
+      "2025-05-04": { text: "10:30 HÁJE (doma)" },
+      "2025-05-11": { text: "11:15 DUKLA JM (venku)" },
+      "2025-05-14": { text: "17:30 HÁJE (venku)" },
+      "2025-05-18": { text: "12:30 V.ŽIŽKOV (doma)" },
+      "2025-05-25": { text: "09:00 XAVEROV (venku)" },
+      "2025-05-28": { text: "17:00 DUKLA JM (doma)" },
+      "2025-06-01": { text: "10:00 ADMIRA (doma)" },
+      "2025-06-07": { text: "08:30 ČAFC (venku)" },
+      "2025-06-14": { text: "12:00 STŘEŠOVICE (doma)" },
     };
 
     function isEvenWeek(date) {
@@ -163,25 +167,25 @@
         const date = new Date(year, month, d);
         const dateStr = formatDate(date);
         const cell = document.createElement("div");
-        cell.textContent = d;
+        cell.innerHTML = `<b>${d}</b>`;
 
         if (dateStr === todayStr) cell.classList.add("today");
         if (MATCHES[dateStr]) {
           cell.classList.add("match");
           cell.title = MATCHES[dateStr].text;
-          cell.textContent += "\n" + MATCHES[dateStr].text;
+          cell.innerHTML += MATCHES[dateStr].text;
         } else if (!OFF_DAYS.includes(dateStr)) {
           const weekday = date.getDay();
           if ((weekday === 2 || weekday === 4)) {
             if (weekday === 2 && isEvenWeek(date)) {
               cell.classList.add("training");
-              cell.textContent += "\n15:30 PODOLÍ";
+              cell.innerHTML += "15:30–17:00 PODOLÍ";
             } else if (weekday === 2 && !isEvenWeek(date)) {
               cell.classList.add("training");
-              cell.textContent += "\n17:00 BÍTOVSKÁ";
+              cell.innerHTML += "17:00–19:00 BÍTOVSKÁ";
             } else if (weekday === 4) {
               cell.classList.add("training");
-              cell.textContent += "\n15:30 PODOLÍ";
+              cell.innerHTML += "15:30–17:00 PODOLÍ";
             }
           }
         }
