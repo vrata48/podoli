@@ -169,7 +169,6 @@
         const cell = document.createElement("div");
         cell.innerHTML = `<b>${d}</b>`;
 
-        if (dateStr === todayStr) cell.classList.add("today");
         if (MATCHES[dateStr]) {
           cell.classList.add("match");
           cell.title = MATCHES[dateStr].text;
@@ -188,6 +187,10 @@
               cell.innerHTML += "15:30–17:00 PODOLÍ";
             }
           }
+        }
+
+        if (dateStr === todayStr) {
+          cell.classList.add("today");
         }
 
         days.appendChild(cell);
